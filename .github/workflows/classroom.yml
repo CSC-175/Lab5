@@ -1,6 +1,6 @@
 name: Autograding Tests
 'on':
-- workflow_dispatch
+- push
 - repository_dispatch
 permissions:
   checks: write
@@ -13,22 +13,20 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Test 5
-      id: test-5
+    - name: Test 1
+      id: test-1
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Test 5
+        test-name: Test 1
         setup-command: g++ Lab5.cpp -o Lab5
         command: "./Lab5"
-        input: |-
+        input: |
+          red
           blue
-          green
-        expected-output: |-
-          The secondary color you mixed is cyan.
-          Bye!
+        expected-output: The secondary color you mixed is magenta.
         comparison-method: contains
         timeout: 1
-        max-score: 3
+        max-score: 5
     - name: Test 2
       id: test-2
       uses: classroom-resources/autograding-io-grader@v1
@@ -36,15 +34,13 @@ jobs:
         test-name: Test 2
         setup-command: g++ Lab5.cpp -o Lab5
         command: "./Lab5"
-        input: |-
-          blue
-          orange
-        expected-output: |-
-          The secondary color you mixed is invalid.
-          Bye!
+        input: |
+          Blue
+          green
+        expected-output: The secondary color you mixed is cyan.
         comparison-method: contains
         timeout: 1
-        max-score: 3
+        max-score: 5
     - name: Test 3
       id: test-3
       uses: classroom-resources/autograding-io-grader@v1
@@ -52,53 +48,18 @@ jobs:
         test-name: Test 3
         setup-command: g++ Lab5.cpp -o Lab5
         command: "./Lab5"
-        input: |-
-          green
-          green
-        expected-output: |-
-          The secondary color you mixed is invalid.
-          Bye!
-        comparison-method: contains
-        timeout: 1
-        max-score: 3
-    - name: Test 4
-      id: test-4
-      uses: classroom-resources/autograding-io-grader@v1
-      with:
-        test-name: Test 4
-        setup-command: g++ Lab5.cpp -o Lab5
-        command: "./Lab5"
-        input: |-
-          blue
+        input: |
           red
-        expected-output: |-
-          The secondary color you mixed is magenta.
-          Bye!
+          Orange
+        expected-output: The secondary color you mixed is invalid.
         comparison-method: contains
         timeout: 1
-        max-score: 3
-    - name: Test 5
-      id: test-5
-      uses: classroom-resources/autograding-io-grader@v1
-      with:
-        test-name: Test 5
-        setup-command: g++ Lab5.cpp -o Lab5
-        command: "./Lab5"
-        input: |-
-          blue
-          green
-        expected-output: |-
-          The secondary color you mixed is cyan.
-          Bye!
-        comparison-method: contains
-        timeout: 1
-        max-score: 3
+        max-score: 5
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        TEST-5_RESULTS: "${{steps.test-5.outputs.result}}"
+        TEST-1_RESULTS: "${{steps.test-1.outputs.result}}"
         TEST-2_RESULTS: "${{steps.test-2.outputs.result}}"
         TEST-3_RESULTS: "${{steps.test-3.outputs.result}}"
-        TEST-4_RESULTS: "${{steps.test-4.outputs.result}}"
       with:
-        runners: test-5,test-2,test-3,test-4,test-5
+        runners: test-1,test-2,test-3
